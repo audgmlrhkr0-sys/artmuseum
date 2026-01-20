@@ -109,13 +109,14 @@ body {
 /* 모바일 전체화면 */
 @media (max-width: 800px) {
     html, body {
-        padding: 0 !important;
         margin: 0 !important;
-        overflow: hidden !important;
-        position: fixed !important;
+        padding: 0 !important;
         width: 100% !important;
         height: 100% !important;
-        touch-action: none;
+        overflow: hidden !important;
+        /* 🔴 모바일 클릭 막던 원인 제거 */
+        position: relative !important;
+        touch-action: manipulation;
     }
 }
 
