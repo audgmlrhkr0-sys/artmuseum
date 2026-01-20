@@ -1332,17 +1332,28 @@ function initMobileControls() {
     btnJump = document.getElementById('btnJump');
     btnCollect = document.getElementById('btnCollect');
     
+    // 모바일 컨트롤 컨테이너 강제 표시
+    const mobileControls = document.getElementById('mobileControls');
+    if (mobileControls) {
+        mobileControls.style.display = 'block';
+        mobileControls.style.visibility = 'visible';
+        mobileControls.style.opacity = '1';
+        mobileControls.style.zIndex = '1000';
+        console.log('모바일 컨트롤 표시됨');
+    }
+    
     if (!btnUp || !btnDown || !btnLeft || !btnRight || !btnJump || !btnCollect) {
         console.warn('모바일 컨트롤 버튼을 찾을 수 없습니다.');
+        console.log('찾은 버튼:', { btnUp, btnDown, btnLeft, btnRight, btnJump, btnCollect });
         return;
     }
     
+    console.log('모바일 컨트롤 초기화 완료');
     setupMobileControls();
 }
 
 function setupMobileControls() {
-
-// 방향키 버튼 이벤트
+    // 방향키 버튼 이벤트
 if (btnLeft) {
     btnLeft.addEventListener('touchstart', (e) => {
         e.preventDefault();
@@ -1541,13 +1552,14 @@ if (btnCollect) {
             collectNearbyPoster();
         }
     });
-}
+} // setupMobileControls 함수 끝
 
 // DOM 로드 후 모바일 컨트롤 초기화
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initMobileControls);
 } else {
-    initMobileControls();
+    // 이미 로드된 경우 즉시 초기화
+    setTimeout(initMobileControls, 100);
 }
 
 // 게임 시작
