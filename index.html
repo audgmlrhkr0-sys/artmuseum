@@ -81,7 +81,9 @@
             const gameContainer = document.getElementById('gameContainer');
             if (gameContainer) {
                 gameContainer.classList.remove('hidden');
-                // display는 CSS가 처리하도록 함
+                gameContainer.style.display = 'block';
+                gameContainer.style.visibility = 'visible';
+                gameContainer.style.opacity = '1';
                 console.log('게임 컨테이너 표시');
             } else {
                 console.error('게임 컨테이너를 찾을 수 없습니다!');
@@ -96,17 +98,32 @@
                 console.log('모바일 컨트롤 표시');
             }
             
-            // 전체 화면 시도
+            // 전체 화면 시도 (모바일에서는 CSS로 처리)
             try {
-                const element = document.documentElement;
-                if (element.requestFullscreen) {
-                    element.requestFullscreen().catch(() => {});
-                } else if (element.webkitRequestFullscreen) {
-                    element.webkitRequestFullscreen();
-                } else if (element.mozRequestFullScreen) {
-                    element.mozRequestFullScreen();
-                } else if (element.msRequestFullscreen) {
-                    element.msRequestFullscreen();
+                // 모바일 감지
+                const isMobile = window.innerWidth <= 800 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                
+                if (!isMobile) {
+                    // 데스크톱에서만 전체화면 API 사용
+                    const element = document.documentElement;
+                    if (element.requestFullscreen) {
+                        element.requestFullscreen().catch(() => {
+                            console.log('전체 화면 API 실패, CSS로 처리');
+                        });
+                    } else if (element.webkitRequestFullscreen) {
+                        element.webkitRequestFullscreen();
+                    } else if (element.mozRequestFullScreen) {
+                        element.mozRequestFullScreen();
+                    } else if (element.msRequestFullscreen) {
+                        element.msRequestFullscreen();
+                    }
+                } else {
+                    // 모바일에서는 CSS로 전체화면 처리
+                    document.body.style.position = 'fixed';
+                    document.body.style.width = '100%';
+                    document.body.style.height = '100%';
+                    document.body.style.overflow = 'hidden';
+                    console.log('모바일 전체화면 CSS 적용');
                 }
             } catch (e) {
                 console.log('전체 화면 실패:', e);
