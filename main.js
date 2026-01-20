@@ -1313,13 +1313,8 @@ function checkExistingGamepads() {
     }
 }
 
-// 모바일 터치 컨트롤
-const btnUp = document.getElementById('btnUp');
-const btnDown = document.getElementById('btnDown');
-const btnLeft = document.getElementById('btnLeft');
-const btnRight = document.getElementById('btnRight');
-const btnJump = document.getElementById('btnJump');
-const btnCollect = document.getElementById('btnCollect');
+// 모바일 터치 컨트롤 - DOM 로드 후 초기화
+let btnUp, btnDown, btnLeft, btnRight, btnJump, btnCollect;
 
 // 터치 입력 상태
 const touchInput = {
@@ -1328,6 +1323,24 @@ const touchInput = {
     down: false,
     up: false
 };
+
+function initMobileControls() {
+    btnUp = document.getElementById('btnUp');
+    btnDown = document.getElementById('btnDown');
+    btnLeft = document.getElementById('btnLeft');
+    btnRight = document.getElementById('btnRight');
+    btnJump = document.getElementById('btnJump');
+    btnCollect = document.getElementById('btnCollect');
+    
+    if (!btnUp || !btnDown || !btnLeft || !btnRight || !btnJump || !btnCollect) {
+        console.warn('모바일 컨트롤 버튼을 찾을 수 없습니다.');
+        return;
+    }
+    
+    setupMobileControls();
+}
+
+function setupMobileControls() {
 
 // 방향키 버튼 이벤트
 if (btnLeft) {
@@ -1528,6 +1541,13 @@ if (btnCollect) {
             collectNearbyPoster();
         }
     });
+}
+
+// DOM 로드 후 모바일 컨트롤 초기화
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileControls);
+} else {
+    initMobileControls();
 }
 
 // 게임 시작

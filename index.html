@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>미술관 아카이브 러너</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -20,11 +20,16 @@
         <div id="mobileControls" class="mobile-controls">
             <!-- 좌측 상단: 방향키 키패드 -->
             <div id="dpad" class="dpad">
-                <button id="btnUp" class="dpad-btn dpad-up">↑</button>
-                <div class="dpad-middle">
+                <div class="dpad-grid">
+                    <div class="dpad-cell"></div>
+                    <button id="btnUp" class="dpad-btn dpad-up">↑</button>
+                    <div class="dpad-cell"></div>
                     <button id="btnLeft" class="dpad-btn dpad-left">←</button>
-                    <button id="btnDown" class="dpad-btn dpad-down">↓</button>
+                    <div class="dpad-cell"></div>
                     <button id="btnRight" class="dpad-btn dpad-right">→</button>
+                    <div class="dpad-cell"></div>
+                    <button id="btnDown" class="dpad-btn dpad-down">↓</button>
+                    <div class="dpad-cell"></div>
                 </div>
             </div>
             
