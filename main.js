@@ -1095,7 +1095,9 @@ function startGame() {
     gameState.isJumping = false;
     gameState.isOnGround = true;
     gameState.velocityY = 0;
-    gameState.canvasHeight = 600;
+    // 모바일 가로 모드 감지 및 캔버스 높이 조정
+    const isMobileLandscape = window.innerWidth <= 800 && window.innerHeight < window.innerWidth;
+    gameState.canvasHeight = isMobileLandscape ? window.innerHeight : 600;
     gameState.obstacles = [];
     gameState.posters = [];
     gameState.platforms = [];

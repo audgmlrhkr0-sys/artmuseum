@@ -110,6 +110,21 @@ body {
     }
 }
 
+/* 모바일 가로 모드 강제 */
+@media screen and (orientation: portrait) {
+    html, body {
+        transform: rotate(90deg);
+        transform-origin: center center;
+        width: 100vh;
+        height: 100vw;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        margin-left: -50vh;
+        margin-top: -50vw;
+    }
+}
+
 /* 모바일 전체화면 */
 @media (max-width: 800px) {
     html, body {
@@ -118,8 +133,9 @@ body {
         width: 100% !important;
         height: 100% !important;
         overflow: hidden !important;
-        /* 🔴 모바일 클릭 막던 원인 제거 */
-        position: relative !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
         touch-action: manipulation;
     }
 }
@@ -138,6 +154,19 @@ body {
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* 모바일 가로 모드에서 게임 컨테이너 크기 조정 */
+@media screen and (max-width: 800px) and (orientation: landscape) {
+    #gameContainer {
+        width: 100vw !important;
+        height: 100vh !important;
+    }
+    
+    #gameCanvas {
+        width: 100% !important;
+        height: 100% !important;
+    }
 }
 
 #gameContainer.hidden {

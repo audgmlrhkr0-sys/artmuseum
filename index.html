@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="screen-orientation" content="landscape">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>미술관 아카이브 러너</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -66,7 +70,6 @@
     <script>
         // 즉시 실행 함수로 beginGame 정의
         function beginGame() {
-            alert('beginGame 함수 호출됨!');
             console.log('beginGame 호출됨 - 인라인 스크립트');
             
             // 시작 화면 숨기기
@@ -98,63 +101,83 @@
                 console.log('모바일 컨트롤 표시');
             }
             
-            // 전체 화면 시도 (모바일에서는 CSS로 처리)
-            try {
-                // 모바일 감지
-                const isMobile = window.innerWidth <= 800 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-                
-                if (!isMobile) {
-                    // 데스크톱에서만 전체화면 API 사용
-                    const element = document.documentElement;
-                    if (element.requestFullscreen) {
-                        element.requestFullscreen().catch(() => {
-                            console.log('전체 화면 API 실패, CSS로 처리');
-                        });
-                    } else if (element.webkitRequestFullscreen) {
-                        element.webkitRequestFullscreen();
-                    } else if (element.mozRequestFullScreen) {
-                        element.mozRequestFullScreen();
-                    } else if (element.msRequestFullscreen) {
-                        element.msRequestFullscreen();
-                    }
-                } else {
-                    // 모바일에서는 CSS로 전체화면 처리
-                    document.body.style.position = 'fixed';
-                    document.body.style.width = '100%';
-                    document.body.style.height = '100%';
-                    document.body.style.overflow = 'hidden';
-                    console.log('모바일 전체화면 CSS 적용');
+            // 전체 화면 시도 (모바일/데스크톱 모두)
+            function enterFullscreen() {
+                const element = document.documentElement;
+                if (element.requestFullscreen) {
+                    return element.requestFullscreen().catch(() => {
+                        console.log('전체 화면 API 실패');
+                        return false;
+                    });
+                } else if (element.webkitRequestFullscreen) {
+                    element.webkitRequestFullscreen();
+                    return Promise.resolve();
+                } else if (element.mozRequestFullScreen) {
+                    element.mozRequestFullScreen();
+                    return Promise.resolve();
+                } else if (element.msRequestFullscreen) {
+                    element.msRequestFullscreen();
+                    return Promise.resolve();
                 }
-            } catch (e) {
-                console.log('전체 화면 실패:', e);
+                return Promise.resolve();
+            }
+            
+            // 전체화면 진입 시도
+            enterFullscreen().then(() => {
+                console.log('전체화면 진입 완료');
+            }).catch(() => {
+                console.log('전체화면 실패, CSS로 처리');
+            });
+            
+            // 모바일 가로 모드 강제
+            if (screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock('landscape').catch(() => {
+                    console.log('화면 회전 잠금 실패');
+                });
             }
             
             // 게임 시작 (main.js의 startGame 함수 호출) - 약간의 지연 후 호출
             setTimeout(function() {
+                console.log('startGame 함수 확인 중...');
                 if (typeof startGame === 'function') {
                     console.log('startGame 함수 호출');
-                    startGame();
+                    try {
+                        startGame();
+                        console.log('startGame 실행 완료');
+                    } catch (e) {
+                        console.error('startGame 실행 오류:', e);
+                        alert('게임 시작 중 오류: ' + e.message);
+                    }
                 } else {
                     console.error('startGame 함수를 찾을 수 없습니다!');
-                    // 2초 후 다시 시도
-                    setTimeout(function() {
+                    // 재시도 로직
+                    let retryCount = 0;
+                    const retryInterval = setInterval(function() {
+                        retryCount++;
                         if (typeof startGame === 'function') {
-                            console.log('재시도: startGame 함수 호출');
-                            startGame();
-                        } else {
-                            console.error('startGame 함수를 여전히 찾을 수 없습니다!');
+                            console.log('재시도 ' + retryCount + ': startGame 함수 호출');
+                            clearInterval(retryInterval);
+                            try {
+                                startGame();
+                            } catch (e) {
+                                console.error('startGame 실행 오류:', e);
+                            }
+                        } else if (retryCount >= 30) {
+                            console.error('startGame 함수를 찾을 수 없습니다! (30회 시도)');
+                            clearInterval(retryInterval);
                             alert('게임을 시작할 수 없습니다. 페이지를 새로고침해주세요.');
                         }
-                    }, 2000);
+                    }, 100);
                 }
                 
                 // 모바일 컨트롤 초기화
                 setTimeout(function() {
                     if (typeof initMobileControls === 'function') {
+                        console.log('모바일 컨트롤 초기화');
                         initMobileControls();
                     }
-                }, 500);
-            }, 100);
+                }, 1000);
+            }, 300);
         }
         
         // 페이지 로드 확인
