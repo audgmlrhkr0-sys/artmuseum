@@ -1585,81 +1585,134 @@ function enterFullscreen() {
     }
 }
 
-// 게임 시작 함수 (시작 버튼에서 호출)
-function startGameWithFullscreen() {
-    console.log('startGameWithFullscreen 호출됨');
-    
-    const startScreen = document.getElementById('startScreen');
-    const gameContainer = document.getElementById('gameContainer');
-    const mobileControls = document.getElementById('mobileControls');
+// startGameWithFullscreen는 beginGame으로 대체됨
+
+// 게임 시작 함수 (간단한 버전) - 전역 함수로 선언
+window.beginGame = function() {
+    console.log('beginGame 호출됨');
     
     // 시작 화면 숨기기
+    const startScreen = document.getElementById('startScreen');
     if (startScreen) {
         startScreen.classList.add('hidden');
+        startScreen.style.display = 'none';
         console.log('시작 화면 숨김');
     } else {
         console.error('시작 화면을 찾을 수 없습니다!');
     }
     
     // 게임 컨테이너 표시
+    const gameContainer = document.getElementById('gameContainer');
     if (gameContainer) {
         gameContainer.classList.remove('hidden');
+        gameContainer.style.display = 'block';
         console.log('게임 컨테이너 표시');
     } else {
         console.error('게임 컨테이너를 찾을 수 없습니다!');
         return;
     }
     
-    // 전체 화면 진입 (실패해도 게임은 시작)
-    try {
-        enterFullscreen();
-    } catch (err) {
-        console.log('전체 화면 진입 실패 (계속 진행):', err);
-    }
-    
     // 모바일 컨트롤 표시
+    const mobileControls = document.getElementById('mobileControls');
     if (mobileControls) {
         mobileControls.classList.remove('hidden');
+        mobileControls.style.display = 'block';
         console.log('모바일 컨트롤 표시');
     }
     
+    // 전체 화면 시도 (실패해도 계속 진행)
+    try {
+        const element = document.documentElement;
+        if (element.requestFullscreen) {
+            element.requestFullscreen().catch(() => {
+                console.log('전체 화면 요청 실패 (계속 진행)');
+            });
+        } else if (element.webkitRequestFullscreen) {
+            element.webkitRequestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+        } else if (element.msRequestFullscreen) {
+            element.msRequestFullscreen();
+        }
+    } catch (e) {
+        console.log('전체 화면 실패:', e);
+    }
+    
     // 게임 시작
-    console.log('게임 시작');
+    console.log('게임 시작 함수 호출');
     startGame();
     
     // 모바일 컨트롤 초기화
     setTimeout(() => {
         initMobileControls();
-    }, 100);
-}
+    }, 200);
+};
 
-// 시작 버튼 이벤트 - DOM 로드 후 설정
-function setupStartButton() {
+// 시작 버튼 이벤트 - 여러 방법으로 시도
+window.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM 로드 완료');
+    
     const startBtn = document.getElementById('startBtn');
+    console.log('시작 버튼:', startBtn);
+    
     if (startBtn) {
-        console.log('시작 버튼 찾음');
-        startBtn.addEventListener('click', (e) => {
+        // 클릭 이벤트
+        startBtn.onclick = function(e) {
             e.preventDefault();
-            console.log('시작 버튼 클릭됨');
-            startGameWithFullscreen();
-        });
-        startBtn.addEventListener('touchend', (e) => {
+            e.stopPropagation();
+            console.log('onclick 이벤트 발생');
+            beginGame();
+            return false;
+        };
+        
+        // addEventListener도 추가
+        startBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('시작 버튼 터치됨');
-            startGameWithFullscreen();
+            e.stopPropagation();
+            console.log('addEventListener click 발생');
+            beginGame();
+            return false;
         });
+        
+        // 터치 이벤트
+        startBtn.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('touchstart 이벤트 발생');
+            beginGame();
+            return false;
+        });
+        
+        startBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('touchend 이벤트 발생');
+            beginGame();
+            return false;
+        });
+        
+        console.log('이벤트 리스너 등록 완료');
     } else {
         console.error('시작 버튼을 찾을 수 없습니다!');
+        // 1초 후 다시 시도
+        setTimeout(function() {
+            const retryBtn = document.getElementById('startBtn');
+            if (retryBtn) {
+                retryBtn.onclick = beginGame;
+                console.log('재시도: 시작 버튼 찾음');
+            }
+        }, 1000);
     }
-}
+});
 
-// DOM 로드 후 시작 버튼 설정
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupStartButton);
-} else {
-    // 이미 로드된 경우
-    setupStartButton();
-}
+// 즉시 실행도 시도
+(function() {
+    const startBtn = document.getElementById('startBtn');
+    if (startBtn) {
+        startBtn.onclick = beginGame;
+        console.log('즉시 실행: 시작 버튼 이벤트 설정');
+    }
+})();
 
 // DOM 로드 후 모바일 컨트롤 초기화 (게임 시작 후에만)
 // initMobileControls는 startGameWithFullscreen에서 호출됨

@@ -70,6 +70,9 @@ body {
     transition: all 0.3s;
     animation: fadeInUp 0.8s ease-out 0.4s both;
     touch-action: manipulation;
+    pointer-events: auto !important;
+    z-index: 2001;
+    position: relative;
 }
 
 .start-btn:hover {
