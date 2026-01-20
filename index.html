@@ -63,6 +63,93 @@
         </div>
     </div>
 
+    <script>
+        // 즉시 실행 함수로 beginGame 정의
+        function beginGame() {
+            console.log('beginGame 호출됨 - 인라인 스크립트');
+            
+            // 시작 화면 숨기기
+            const startScreen = document.getElementById('startScreen');
+            if (startScreen) {
+                startScreen.classList.add('hidden');
+                startScreen.style.display = 'none';
+                console.log('시작 화면 숨김');
+            }
+            
+            // 게임 컨테이너 표시
+            const gameContainer = document.getElementById('gameContainer');
+            if (gameContainer) {
+                gameContainer.classList.remove('hidden');
+                gameContainer.style.display = 'block';
+                console.log('게임 컨테이너 표시');
+            }
+            
+            // 모바일 컨트롤 표시
+            const mobileControls = document.getElementById('mobileControls');
+            if (mobileControls) {
+                mobileControls.classList.remove('hidden');
+                mobileControls.style.display = 'block';
+                console.log('모바일 컨트롤 표시');
+            }
+            
+            // 전체 화면 시도
+            try {
+                const element = document.documentElement;
+                if (element.requestFullscreen) {
+                    element.requestFullscreen().catch(() => {});
+                } else if (element.webkitRequestFullscreen) {
+                    element.webkitRequestFullscreen();
+                } else if (element.mozRequestFullScreen) {
+                    element.mozRequestFullScreen();
+                } else if (element.msRequestFullscreen) {
+                    element.msRequestFullscreen();
+                }
+            } catch (e) {
+                console.log('전체 화면 실패:', e);
+            }
+            
+            // 게임 시작 (main.js의 startGame 함수 호출)
+            if (typeof startGame === 'function') {
+                console.log('startGame 함수 호출');
+                startGame();
+            } else {
+                console.error('startGame 함수를 찾을 수 없습니다!');
+                // 1초 후 다시 시도
+                setTimeout(function() {
+                    if (typeof startGame === 'function') {
+                        startGame();
+                    }
+                }, 1000);
+            }
+            
+            // 모바일 컨트롤 초기화
+            setTimeout(function() {
+                if (typeof initMobileControls === 'function') {
+                    initMobileControls();
+                }
+            }, 500);
+        }
+        
+        // 페이지 로드 확인
+        console.log('HTML 스크립트 로드됨');
+        
+        // DOM 로드 후 확인
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM 로드 완료');
+            const startBtn = document.getElementById('startBtn');
+            console.log('시작 버튼 요소:', startBtn);
+            
+            if (startBtn) {
+                startBtn.onclick = function(e) {
+                    e.preventDefault();
+                    console.log('버튼 클릭 이벤트 발생');
+                    beginGame();
+                    return false;
+                };
+                console.log('onclick 이벤트 설정 완료');
+            }
+        });
+    </script>
     <script src="main.js"></script>
 </body>
 </html>
