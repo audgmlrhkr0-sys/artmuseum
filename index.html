@@ -12,7 +12,7 @@
         <div class="start-content">
             <h1>미술관 아카이브 러너</h1>
             <p>포스터를 수집하고 챕터를 완료하세요!</p>
-            <button id="startBtn" class="start-btn" onclick="beginGame(); return false;">게임 시작</button>
+            <button id="startBtn" class="start-btn" onclick="alert('버튼 클릭됨!'); beginGame(); return false;" style="pointer-events: auto !important; position: relative; z-index: 2002;">게임 시작</button>
         </div>
     </div>
 
@@ -66,6 +66,7 @@
     <script>
         // 즉시 실행 함수로 beginGame 정의
         function beginGame() {
+            alert('beginGame 함수 호출됨!');
             console.log('beginGame 호출됨 - 인라인 스크립트');
             
             // 시작 화면 숨기기

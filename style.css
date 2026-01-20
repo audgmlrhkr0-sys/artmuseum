@@ -31,6 +31,7 @@ body {
     align-items: center;
     z-index: 2000;
     transition: opacity 0.5s ease-out;
+    pointer-events: auto !important;
 }
 
 .start-screen.hidden {
@@ -41,6 +42,9 @@ body {
     text-align: center;
     color: white;
     padding: 40px;
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 2001;
 }
 
 .start-content h1 {
