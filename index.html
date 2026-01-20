@@ -81,8 +81,11 @@
             const gameContainer = document.getElementById('gameContainer');
             if (gameContainer) {
                 gameContainer.classList.remove('hidden');
-                gameContainer.style.display = 'block';
+                // display는 CSS가 처리하도록 함
                 console.log('게임 컨테이너 표시');
+            } else {
+                console.error('게임 컨테이너를 찾을 수 없습니다!');
+                return;
             }
             
             // 모바일 컨트롤 표시
@@ -109,26 +112,32 @@
                 console.log('전체 화면 실패:', e);
             }
             
-            // 게임 시작 (main.js의 startGame 함수 호출)
-            if (typeof startGame === 'function') {
-                console.log('startGame 함수 호출');
-                startGame();
-            } else {
-                console.error('startGame 함수를 찾을 수 없습니다!');
-                // 1초 후 다시 시도
-                setTimeout(function() {
-                    if (typeof startGame === 'function') {
-                        startGame();
-                    }
-                }, 1000);
-            }
-            
-            // 모바일 컨트롤 초기화
+            // 게임 시작 (main.js의 startGame 함수 호출) - 약간의 지연 후 호출
             setTimeout(function() {
-                if (typeof initMobileControls === 'function') {
-                    initMobileControls();
+                if (typeof startGame === 'function') {
+                    console.log('startGame 함수 호출');
+                    startGame();
+                } else {
+                    console.error('startGame 함수를 찾을 수 없습니다!');
+                    // 2초 후 다시 시도
+                    setTimeout(function() {
+                        if (typeof startGame === 'function') {
+                            console.log('재시도: startGame 함수 호출');
+                            startGame();
+                        } else {
+                            console.error('startGame 함수를 여전히 찾을 수 없습니다!');
+                            alert('게임을 시작할 수 없습니다. 페이지를 새로고침해주세요.');
+                        }
+                    }, 2000);
                 }
-            }, 500);
+                
+                // 모바일 컨트롤 초기화
+                setTimeout(function() {
+                    if (typeof initMobileControls === 'function') {
+                        initMobileControls();
+                    }
+                }, 500);
+            }, 100);
         }
         
         // 페이지 로드 확인
