@@ -72,6 +72,10 @@ const posterImage = document.getElementById('posterImage');
 const posterDescription = document.getElementById('posterDescription');
 const continueBtn = document.getElementById('continueBtn');
 const closeModal = document.querySelector('.close');
+const startScreen = document.getElementById('startScreen');
+const startBtn = document.getElementById('startBtn');
+const gameContainer = document.getElementById('gameContainer');
+const mobileControls = document.getElementById('mobileControls');
 
 // 플레이어 생성
 function createPlayer() {
@@ -1130,6 +1134,14 @@ function startGame() {
     gameState.gameLoop = setInterval(gameLoop, 16); // 약 60fps
 }
 
+// 초기 상태 설정 - 게임은 시작 버튼을 눌러야 시작됨
+gameState.isRunning = false;
+
+// 게임 루프는 항상 실행 (게임 오버 시에도 게임패드 입력 처리를 위해)
+if (!gameState.gameLoop) {
+    gameState.gameLoop = setInterval(gameLoop, 16);
+}
+
 // 키보드 입력
 let keys = {};
 let moveInterval = null;
@@ -1278,7 +1290,11 @@ document.addEventListener('keyup', (e) => {
 });
 
 // 이벤트 리스너
-restartBtn.addEventListener('click', startGame);
+restartBtn.addEventListener('click', () => {
+    startGame();
+    // 재시작 시에도 전체 화면 유지
+    enterFullscreen();
+});
 continueBtn.addEventListener('click', closePosterModal);
 closeModal.addEventListener('click', closePosterModal);
 
@@ -1333,8 +1349,8 @@ function initMobileControls() {
     btnCollect = document.getElementById('btnCollect');
     
     // 모바일 컨트롤 컨테이너 강제 표시
-    const mobileControls = document.getElementById('mobileControls');
     if (mobileControls) {
+        mobileControls.classList.remove('hidden');
         mobileControls.style.display = 'block';
         mobileControls.style.visibility = 'visible';
         mobileControls.style.opacity = '1';
@@ -1554,16 +1570,60 @@ if (btnCollect) {
     });
 } // setupMobileControls 함수 끝
 
-// DOM 로드 후 모바일 컨트롤 초기화
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initMobileControls);
-} else {
-    // 이미 로드된 경우 즉시 초기화
-    setTimeout(initMobileControls, 100);
+// 전체 화면 진입 함수
+function enterFullscreen() {
+    const element = document.documentElement;
+    
+    if (element.requestFullscreen) {
+        element.requestFullscreen().catch(err => {
+            console.log('전체 화면 진입 실패:', err);
+        });
+    } else if (element.webkitRequestFullscreen) {
+        element.webkitRequestFullscreen();
+    } else if (element.mozRequestFullScreen) {
+        element.mozRequestFullScreen();
+    } else if (element.msRequestFullscreen) {
+        element.msRequestFullscreen();
+    }
 }
 
-// 게임 시작
-startGame();
+// 게임 시작 함수 (시작 버튼에서 호출)
+function startGameWithFullscreen() {
+    // 시작 화면 숨기기
+    startScreen.classList.add('hidden');
+    
+    // 게임 컨테이너 표시
+    gameContainer.classList.remove('hidden');
+    
+    // 전체 화면 진입
+    enterFullscreen();
+    
+    // 모바일 컨트롤 표시
+    if (mobileControls) {
+        mobileControls.classList.remove('hidden');
+    }
+    
+    // 게임 시작
+    startGame();
+    
+    // 모바일 컨트롤 초기화
+    setTimeout(() => {
+        initMobileControls();
+    }, 100);
+}
+
+// 시작 버튼 이벤트
+if (startBtn) {
+    startBtn.addEventListener('click', startGameWithFullscreen);
+    startBtn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        startGameWithFullscreen();
+    });
+}
+
+// DOM 로드 후 모바일 컨트롤 초기화 (게임 시작 후에만)
+// initMobileControls는 startGameWithFullscreen에서 호출됨
+
 // 게임패드 확인
 checkExistingGamepads();
 

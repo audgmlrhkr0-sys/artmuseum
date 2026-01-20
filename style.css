@@ -18,6 +18,91 @@ body {
     height: 100%;
 }
 
+/* 게임 시작 화면 */
+.start-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    transition: opacity 0.5s ease-out;
+}
+
+.start-screen.hidden {
+    display: none;
+}
+
+.start-content {
+    text-align: center;
+    color: white;
+    padding: 40px;
+}
+
+.start-content h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    animation: fadeInDown 0.8s ease-out;
+}
+
+.start-content p {
+    font-size: 24px;
+    margin-bottom: 40px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.start-btn {
+    padding: 20px 60px;
+    font-size: 28px;
+    font-weight: bold;
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s;
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+    touch-action: manipulation;
+}
+
+.start-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.start-btn:active {
+    transform: scale(0.95);
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* 모바일 전체화면 */
 @media (max-width: 800px) {
     html, body {
@@ -61,6 +146,19 @@ body {
         left: 0 !important;
         right: 0 !important;
         bottom: 0 !important;
+    }
+    
+    .start-content h1 {
+        font-size: 36px;
+    }
+    
+    .start-content p {
+        font-size: 18px;
+    }
+    
+    .start-btn {
+        padding: 15px 40px;
+        font-size: 24px;
     }
 }
 
@@ -649,18 +747,22 @@ body {
     font-weight: bold;
 }
 
-/* 모바일 터치 컨트롤 - 항상 표시 */
+/* 모바일 터치 컨트롤 */
 .mobile-controls {
-    position: absolute !important;
-    width: 100% !important;
-    height: 100% !important;
-    pointer-events: none !important;
-    z-index: 1000 !important;
-    display: block !important;
-    top: 0 !important;
-    left: 0 !important;
-    visibility: visible !important;
-    opacity: 1 !important;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+    display: block;
+    top: 0;
+    left: 0;
+    visibility: visible;
+    opacity: 1;
+}
+
+.mobile-controls.hidden {
+    display: none !important;
 }
 
 /* 데스크톱에서는 숨김 (선택적) */

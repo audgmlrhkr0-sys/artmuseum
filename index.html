@@ -7,7 +7,16 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="gameContainer">
+    <!-- 게임 시작 화면 -->
+    <div id="startScreen" class="start-screen">
+        <div class="start-content">
+            <h1>미술관 아카이브 러너</h1>
+            <p>포스터를 수집하고 챕터를 완료하세요!</p>
+            <button id="startBtn" class="start-btn">게임 시작</button>
+        </div>
+    </div>
+
+    <div id="gameContainer" class="hidden">
         <div id="score">점수: 0</div>
         <div id="gameCanvas"></div>
         <div id="gameOver" class="hidden">
@@ -17,7 +26,7 @@
         </div>
         
         <!-- 모바일 터치 컨트롤 -->
-        <div id="mobileControls" class="mobile-controls">
+        <div id="mobileControls" class="mobile-controls hidden">
             <!-- 좌측 상단: 방향키 키패드 -->
             <div id="dpad" class="dpad">
                 <div class="dpad-grid">
