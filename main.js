@@ -76,6 +76,7 @@ const startScreen = document.getElementById('startScreen');
 const startBtn = document.getElementById('startBtn');
 const gameContainer = document.getElementById('gameContainer');
 const mobileControls = document.getElementById('mobileControls');
+const mobileControls = document.getElementById('mobileControls');
 
 // 플레이어 생성
 function createPlayer() {

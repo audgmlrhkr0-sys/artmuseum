@@ -772,15 +772,15 @@ body {
     }
 }
 
-/* 방향키 키패드 (좌측 상단) */
+/* 방향키 키패드 (좌측) */
 .dpad {
     position: absolute;
-    top: 20px;
+    bottom: 20px;
     left: 20px;
     width: 140px;
     height: 140px;
     pointer-events: all;
-    z-index: 30;
+    z-index: 1001;
 }
 
 .dpad-grid {
@@ -845,13 +845,13 @@ body {
 /* 액션 버튼 (우측) */
 .action-buttons {
     position: absolute;
-    top: 20px;
+    bottom: 20px;
     right: 20px;
     display: flex;
     flex-direction: column;
     gap: 15px;
     pointer-events: all;
-    z-index: 30;
+    z-index: 1001;
 }
 
 .action-btn {
@@ -899,7 +899,7 @@ body {
     .dpad {
         width: 120px;
         height: 120px;
-        top: 15px;
+        bottom: 15px;
         left: 15px;
     }
     
@@ -910,7 +910,7 @@ body {
     }
     
     .action-buttons {
-        top: 15px;
+        bottom: 15px;
         right: 15px;
         gap: 12px;
     }
